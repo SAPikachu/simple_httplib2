@@ -32,6 +32,7 @@ class HttpSession:
         self.host = host
         self.url_template_parts = urlparse(host)
         self.cookies = SimpleCookie()
+        self.default_headers = {}
         if initial_cookies:
             self.cookies.load(initial_cookies)
 
@@ -76,7 +77,9 @@ class HttpSession:
         if isinstance(body, dict):
             body = urlencode(body)
 
-        headers = dict(headers)
+        new_headers = dict(self.default_headers)
+        new_headers.update(headers)
+        headers = new_headers
         self.debug_print("headers:", headers)
         
         if body:
